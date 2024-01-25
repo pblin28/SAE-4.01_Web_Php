@@ -1,0 +1,90 @@
+-- Création de la table Artist
+CREATE TABLE Artist (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL,
+    bio TEXT
+);
+
+-- Création de la table Album
+CREATE TABLE Album (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(255) NOT NULL,
+    artist_id INTEGER,
+    release_year INTEGER,
+    genre VARCHAR(100),
+    cover VARCHAR(255),
+    FOREIGN KEY (artist_id) REFERENCES Artist(id) ON DELETE CASCADE
+);
+
+-- Création de la table Music
+CREATE TABLE Music (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(255) NOT NULL,
+    artist_id INTEGER,
+    interpreter_id INTEGER,
+    composer_id INTEGER,
+    release_year INTEGER,
+    genre VARCHAR(100),
+    cover VARCHAR(255),
+    FOREIGN KEY (artist_id) REFERENCES Artist(id) ON DELETE CASCADE,
+    FOREIGN KEY (interpreter_id) REFERENCES Artist(id) ON DELETE CASCADE,
+    FOREIGN KEY (composer_id) REFERENCES Artist(id) ON DELETE CASCADE
+);
+
+-- Création de la table User
+CREATE TABLE User (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL -- Assurez-vous de stocker les mots de passe de manière sécurisée
+);
+
+-- Création de la table Rating (si vous souhaitez permettre aux utilisateurs de noter les albums, par exemple)
+CREATE TABLE Rating (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    album_id INTEGER,
+    rating INTEGER,
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (album_id) REFERENCES Album(id) ON DELETE CASCADE
+);
+
+-- Création de la table Genre
+CREATE TABLE Genre (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Création de la table Rating
+CREATE TABLE Rating (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    album_id INTEGER,
+    rating INTEGER,
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (album_id) REFERENCES Album(id) ON DELETE CASCADE
+);
+
+
+ALTER TABLE Artist
+ADD COLUMN bio TEXT;
+
+ALTER TABLE Music
+ADD COLUMN bio TEXT;
+
+ALTER TABLE Music
+ADD COLUMN user_id INTEGER,
+ADD FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE;
+
+ALTER TABLE Album
+ADD COLUMN rating INTEGER;
+
+ALTER TABLE Music
+ADD COLUMN rating INTEGER;
+
+ALTER TABLE Album
+ADD COLUMN genre_id INTEGER,
+ADD FOREIGN KEY (genre_id) REFERENCES Genre(id) ON DELETE SET NULL;
+
+ALTER TABLE Music
+ADD COLUMN genre_id INTEGER,
+ADD FOREIGN KEY (genre_id) REFERENCES Genre(id) ON DELETE SET NULL;
